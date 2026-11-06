@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1c1410">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Termografia</title>
+<style>
+:root{--bg:#f1efed;--card:#fff;--ink:#1c1917;--mut:#6b6460;--line:#e7e2de;--ok:#15803d;--nc:#b91c1c;--acc:#f97316;--hd:#1c1410;--p1:#dc2626;--p2:#ea8a0c;--p3:#2563eb}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+header{position:sticky;top:0;z-index:20;background:var(--hd);color:#fff;padding:calc(env(safe-area-inset-top) + 6px) 6px 6px;display:flex;align-items:center;gap:4px;min-height:58px}
+header .t{flex:1;min-width:0;padding:0 6px}
+header h1{font-size:18px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header .s{font-size:12.5px;color:#d6cfc9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ib{background:none;border:0;color:#fff;font-size:24px;width:46px;height:46px;border-radius:12px;flex:none}
+.ib:active{background:rgba(255,255,255,.12)}
+.logo{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#facc15,#f97316 55%,#dc2626);display:grid;place-items:center;font-weight:900;margin-left:6px;flex:none;color:#fff;font-size:18px}
+main{padding:12px 12px calc(110px + env(safe-area-inset-bottom));max-width:760px;margin:0 auto}
+.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 2px rgba(28,25,23,.08)}
+.lbl{display:block;font-size:12.5px;font-weight:700;color:var(--mut);margin:0 0 5px;text-transform:uppercase;letter-spacing:.03em}
+.i{width:100%;font-size:17px;padding:12px;border:1.5px solid #d6d0cb;border-radius:10px;background:#fff;color:var(--ink);font-family:inherit}
+.i:focus{outline:none;border-color:var(--hd);box-shadow:0 0 0 3px rgba(249,115,22,.35)}
+.i.num{font-size:22px;font-weight:700;text-align:center;padding:10px 6px}
+textarea.i{min-height:70px;resize:vertical;font-size:15.5px}
+.row{display:flex;gap:10px}.row>*{flex:1;min-width:0}
+.mb{margin-bottom:14px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{border:1.5px solid #d6d0cb;background:#fff;border-radius:999px;padding:8px 13px;font-size:15px;min-height:42px;line-height:1.1}
+.chip.on{background:var(--hd);color:#fff;border-color:var(--hd)}
+.chip.sm{min-height:36px;padding:6px 11px;font-size:14px}
+.chip.more{border-style:dashed}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:12px 16px;font-size:16.5px;font-weight:700;min-height:52px;background:#e7e2de;color:var(--ink)}
+.btn:active{filter:brightness(.92)}
+.btn.pri{background:var(--hd);color:#fff}.btn.acc{background:var(--acc);color:#fff}.btn.red{background:var(--nc);color:#fff}
+.btn.blk{width:100%}.btn.sm{min-height:42px;font-size:15px;padding:8px 12px}
+#bar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(255,255,255,.97);border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:flex;gap:10px;justify-content:center}
+#bar:empty{display:none}
+#bar>*{flex:1;max-width:380px}
+.it-l{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:14px;padding:13px 14px;margin-bottom:9px;box-shadow:0 1px 2px rgba(28,25,23,.08);width:100%;border:0;text-align:left}
+.it-l .n{font-weight:800;color:var(--mut);min-width:26px;font-size:15px}
+.it-l .m{flex:1;min-width:0}.it-l .m b{display:block;font-size:16.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.it-l .m span{font-size:13.5px;color:var(--mut);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.it-l .tt{font-weight:800;font-size:17px;white-space:nowrap}
+.bd{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:24px;border-radius:7px;font-size:12.5px;font-weight:800;padding:0 7px;color:#fff;margin-left:4px;white-space:nowrap}
+.bd.p1{background:var(--p1)}.bd.p2{background:var(--p2)}.bd.p3{background:var(--p3)}.bd.ok{background:var(--ok)}.bd.wn{background:#a8a29e}
+.stat{display:flex;gap:8px;flex-wrap:wrap}
+.stat div{flex:1;min-width:64px;background:#faf8f6;border-radius:10px;padding:8px;text-align:center}
+.stat b{display:block;font-size:22px}.stat span{font-size:11.5px;color:var(--mut);font-weight:700}
+.sec{display:flex;align-items:center;gap:8px;margin:18px 2px 8px;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--mut)}
+.sec::after{content:"";flex:1;height:1px;background:#d6d0cb}
+.ph{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.th{width:66px;height:66px;border-radius:10px;object-fit:cover;background:#e7e2de;border:1px solid var(--line)}
+.camb{height:66px;min-width:66px;padding:0 12px;border-radius:10px;border:2px dashed #a8a29e;background:#faf8f6;font-size:14px;font-weight:700;display:inline-flex;align-items:center;gap:6px}
+.res{border-radius:14px;padding:12px 14px;margin-bottom:12px;background:#faf8f6;border:2px solid var(--line)}
+.res.P1{border-color:var(--p1);background:#fef2f2}.res.P2{border-color:var(--p2);background:#fff7ed}.res.P3{border-color:var(--p3);background:#eff6ff}.res.N{border-color:var(--ok);background:#f0fdf4}
+.res .g{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.res .g div{background:#fff;border-radius:9px;padding:6px;text-align:center}
+.res .g b{display:block;font-size:18px}.res .g span{font-size:11px;color:var(--mut);font-weight:700;text-transform:uppercase}
+.cls{display:flex;gap:6px;flex-wrap:wrap}
+.cls button{flex:1;min-width:72px;height:44px;border-radius:10px;border:1.5px solid #d6d0cb;background:#fff;font-weight:800;font-size:13.5px}
+.cls button.on.P1{background:var(--p1);border-color:var(--p1);color:#fff}
+.cls button.on.P2{background:var(--p2);border-color:var(--p2);color:#fff}
+.cls button.on.P3{background:var(--p3);border-color:var(--p3);color:#fff}
+.cls button.on.N{background:var(--ok);border-color:var(--ok);color:#fff}
+.cls button .sg{display:block;font-size:10px;font-weight:700;opacity:.8}
+.warn{font-size:13px;color:#9a3412;background:#ffedd5;border-radius:8px;padding:6px 9px;margin-top:8px}
+.hint{font-size:13px;color:var(--mut)}
+.empty{text-align:center;color:var(--mut);padding:36px 10px}
+.empty b{display:block;font-size:18px;color:var(--ink);margin-bottom:6px}
+#toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:#1c1917;color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:90vw;text-align:center}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+#modal{position:fixed;inset:0;z-index:50;background:rgba(28,25,23,.55);display:none;align-items:flex-end;justify-content:center}
+#modal.on{display:flex}
+#modal .box{background:#fff;width:100%;max-width:560px;border-radius:18px 18px 0 0;padding:18px 16px calc(16px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}
+#modal h3{margin:0 0 8px;font-size:19px}
+#modal h4{margin:14px 0 6px;font-size:13px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
+#modal p{margin:0 0 14px;color:#44403c}
+#modal .acts{display:flex;flex-direction:column;gap:8px}
+#modal img.full{width:100%;border-radius:12px;margin-bottom:12px;max-height:65vh;object-fit:contain;background:#000}
+.srch{margin-bottom:10px}
+.unit{position:relative}.unit::after{content:attr(data-u);position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--mut);font-weight:700;pointer-events:none}
+</style>
+</head>
+<body>
+<header id="hd"></header>
+<main id="app"></main>
+<div id="bar"></div>
+<div id="toast"></div>
+<div id="modal"><div class="box" id="mbox"></div></div>
+<input type="file" id="cam" accept="image/*" capture="environment" hidden>
+<input type="file" id="gal" accept="image/*" multiple hidden>
+<input type="file" id="imp" accept=".json,application/json" hidden>
+<script>
+'use strict';
+/* =========================================================
+   CATÁLOGO — equipamentos, MTA de referência, causas e recomendações
+   ========================================================= */
+const EQ_GRUPOS=[
+ {n:'Cabos e conexões',it:[
+  {id:'cab_pvc',n:'Cabo PVC 70 °C 450/750 V',mta:70},
+  {id:'cab_pvc1k',n:'Cabo PVC 70 °C 0,6/1 kV',mta:70},
+  {id:'cab_hepr',n:'Cabo HEPR 90 °C 0,6/1 kV',mta:90},
+  {id:'cab_epr',n:'Cabo EPR/XLPE 90 °C 0,6/1 kV',mta:90},
+  {id:'cab_mt90',n:'Cabo MT EPR/XLPE 90 °C',mta:90},
+  {id:'cab_mt105',n:'Cabo MT EPR 105 °C',mta:105},
+  {id:'term',n:'Terminal / conexão de cabo',mta:null,h:'Use a MTA do cabo conectado (70 °C PVC · 90 °C HEPR/EPR/XLPE).',cab:true},
+  {id:'barr',n:'Barramento / conexão de barra',mta:null,h:'MTA conforme fabricante do painel/barramento.'},
+  {id:'borne',n:'Borne / régua de bornes',mta:null}
+ ]},
+ {n:'Proteção e manobra',it:[
+  {id:'dj_din',n:'Minidisjuntor (DIN)',mta:null},
+  {id:'dj_cx',n:'Disjuntor caixa moldada',mta:null},
+  {id:'dj_ab',n:'Disjuntor aberto (BT potência)',mta:null},
+  {id:'dr',n:'DR / IDR',mta:null},
+  {id:'fus_nh',n:'Fusível NH / base',mta:null},
+  {id:'fus_dz',n:'Fusível Diazed / Neozed',mta:null},
+  {id:'secc',n:'Seccionadora / chave',mta:null},
+  {id:'cont',n:'Contator',mta:null},
+  {id:'rele',n:'Relé térmico / disjuntor-motor',mta:null},
+  {id:'dps',n:'DPS',mta:null}
+ ]},
+ {n:'Acionamentos e cargas',it:[
+  {id:'inv',n:'Inversor de frequência',mta:null},
+  {id:'soft',n:'Soft-starter',mta:null},
+  {id:'mot',n:'Motor (caixa de ligação/carcaça)',mta:null,ins:true,h:'Carcaça: conforme fabricante. Enrolamento: classe de isolação.'},
+  {id:'tom',n:'Tomada / plugue industrial',mta:null}
+ ]},
+ {n:'Potência',it:[
+  {id:'trf_oleo',n:'Transformador a óleo',mta:null,ins:true,h:'Buchas/conexões e topo do óleo: conforme placa e fabricante.'},
+  {id:'trf_seco',n:'Transformador a seco',mta:null,ins:true,h:'Use a classe de isolação da placa (F 155 °C · H 180 °C).'},
+  {id:'cap',n:'Capacitor / banco',mta:null},
+  {id:'reat',n:'Reator / indutor',mta:null,ins:true},
+  {id:'tctp',n:'TC / TP',mta:null},
+  {id:'out',n:'Outro',mta:null}
+ ]}
+];
+const EQ=Object.fromEntries(EQ_GRUPOS.flatMap(g=>g.it).map(e=>[e.id,e]));
+const CLASSES=[['A',105],['E',120],['B',130],['F',155],['H',180]];
+const FASES=['R','S','T','N','PE','3F'];
+const LOCAIS=['Conexão entrada','Conexão saída','Corpo','Cabo junto ao terminal','Barramento','Outro'];
+const CAUSAS=[
+ {id:'cont',n:'Mau contato / aperto',r:'Desenergizar, limpar e reapertar a conexão com o torque do fabricante.'},
+ {id:'oxi',n:'Oxidação',r:'Limpar ou substituir a conexão oxidada; aplicar composto antioxidante quando aplicável.'},
+ {id:'term',n:'Terminal inadequado',r:'Substituir o terminal por modelo compatível, com crimpagem adequada.'},
+ {id:'sobre',n:'Sobrecarga',r:'Medir a corrente e verificar o dimensionamento do circuito e da proteção.'},
+ {id:'deseq',n:'Desequilíbrio de fases',r:'Redistribuir as cargas entre as fases.'},
+ {id:'sub',n:'Subdimensionado',r:'Redimensionar o componente/condutor para a corrente de projeto.'},
+ {id:'harm',n:'Harmônicas (neutro)',r:'Avaliar harmônicas e o dimensionamento do neutro.'},
+ {id:'def',n:'Componente defeituoso',r:'Substituir o componente.'},
+ {id:'vent',n:'Ventilação deficiente',r:'Melhorar a ventilação/arrefecimento do painel.'}
+];
+const CA=Object.fromEntries(CAUSAS.map(c=>[c.id,c]));
+const REINSP='Reinspecionar por termografia após a correção.';
+const CL={P1:{n:'Imediata',c:'p1'},P2:{n:'Programada',c:'p2'},P3:{n:'Monitorar',c:'p3'},N:{n:'Normal',c:'ok'}};
+const RANK={N:0,P3:1,P2:2,P1:3};
+const CRITERIO='Classificação sugerida = a mais severa entre: (1) MTA: T avaliada ≥ MTA → Imediata; até 10 °C abaixo da MTA → Programada. (2) ΔT entre componentes similares (NETA MTS, tab. 100.18): >15 °C Imediata; 4–15 °C Programada; 1–3 °C Monitorar. (3) ΔT sobre o ambiente (adaptado da NETA): >40 °C Imediata; 21–40 °C Programada; 11–20 °C Monitorar. T avaliada = T corrigida para a corrente nominal quando informadas I medida e I nominal: Tamb + (Tmáx − Tamb)·(In/Imed)². A classificação final é do inspetor.';
+
+/* ========================================================= utilidades */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const hoje=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const fmtData=s=>s?s.split('-').reverse().join('/'):'';
+const LS={get(k,d){try{const v=localStorage.getItem('termo.'+k);return v==null?d:JSON.parse(v)}catch{return d}},set(k,v){try{localStorage.setItem('termo.'+k,JSON.stringify(v))}catch{}}};
+const num=v=>{if(v==null||v==='')return null;const n=parseFloat(String(v).replace(',','.'));return isFinite(n)?n:null};
+const f1=v=>v==null?'':(Math.round(v*10)/10).toLocaleString('pt-BR');
+let toastT;
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2200)}
+function vib(){try{navigator.vibrate&&navigator.vibrate(12)}catch{}}
+
+/* ========================================================= cálculo */
+function calc(a,p){
+ const tmax=num(a.tmax),tref=num(a.tref),tamb=num(a.tamb)??num(p&&p.tamb),im=num(a.imed),inn=num(a.inom),mta=num(a.mta);
+ const r={tmax,tref,tamb,im,inn,mta,dtr:null,dta:null,carga:null,tcorr:null};
+ if(tmax!=null&&tref!=null)r.dtr=tmax-tref;
+ if(tmax!=null&&tamb!=null)r.dta=tmax-tamb;
+ if(im!=null&&im>0&&inn)r.carga=im/inn;
+ if(r.carga&&r.dta!=null)r.tcorr=tamb+r.dta*Math.pow(1/r.carga,2);
+ r.tav=r.tcorr??tmax;
+ r.margem=mta!=null&&r.tav!=null?mta-r.tav:null;
+ let s=null;const up=k=>{if(s==null||RANK[k]>RANK[s])s=k};
+ if(r.margem!=null){if(r.margem<=0)up('P1');else if(r.margem<=10)up('P2');else up('N')}
+ if(r.dtr!=null){if(r.dtr>15)up('P1');else if(r.dtr>=4)up('P2');else if(r.dtr>=1)up('P3');else up('N')}
+ if(r.dta!=null){if(r.dta>40)up('P1');else if(r.dta>20)up('P2');else if(r.dta>10)up('P3');else up('N')}
+ r.sug=s;r.cls=a.cls||s;r.baixa=r.carga!=null&&r.carga<0.4;
+ return r;
+}
+const eqNome=a=>a.eq==='out'||!EQ[a.eq]?(a.eqOutro||'Outro'):EQ[a.eq].n;
+
+/* ========================================================= banco local */
+let db;
+function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open('termo-insp',1);r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore('insp',{keyPath:'id'});d.createObjectStore('pontos',{keyPath:'id'}).createIndex('insp','inspId');d.createObjectStore('fotos',{keyPath:'id'})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+function tx(st,mode,fn){return new Promise((res,rej)=>{const t=db.transaction(st,mode);let out;const r=fn(t.objectStore(st));if(r)r.onsuccess=()=>{out=r.result};t.oncomplete=()=>res(out);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error)})}
+const put=(st,v)=>tx(st,'readwrite',s=>s.put(v));
+const get=(st,k)=>tx(st,'readonly',s=>s.get(k));
+const del=(st,k)=>tx(st,'readwrite',s=>s.delete(k));
+const getAll=st=>tx(st,'readonly',s=>s.getAll());
+const pontosDe=id=>tx('pontos','readonly',s=>s.index('insp').getAll(id)).then(a=>a.sort((x,y)=>x.ordem-y.ordem));
+const fotosPonto=p=>[...p.fotos,...p.achados.flatMap(a=>[...(a.fir||[]),...(a.fvis||[])])];
+
+/* ========================================================= estado */
+const S={view:'home',insp:null,cur:null,ach:null,busca:'',saveT:null,photoTarget:null};
+const urls=new Map();
+async function fotoURL(id){if(urls.has(id))return urls.get(id);const f=await get('fotos',id);if(!f)return '';const u=URL.createObjectURL(f.blob);urls.set(id,u);return u}
+async function hidrataFotos(root=document){for(const im of root.querySelectorAll('img[data-foto]:not([src])')){im.src=await fotoURL(im.dataset.foto)}}
+
+/* ========================================================= modal */
+let modalRes=null;
+function modal(html){$('#mbox').innerHTML=html;$('#modal').classList.add('on')}
+function fechaModal(v){$('#modal').classList.remove('on');$('#mbox').innerHTML='';if(modalRes){const r=modalRes;modalRes=null;r(v)}}
+function ask(titulo,msg,btns){return new Promise(res=>{modalRes=res;modal(`<h3>${esc(titulo)}</h3>${msg?`<p>${msg}</p>`:''}<div class="acts">${btns.map(b=>`<button class="btn blk ${b.c||''}" data-act="mres" data-v="${b.v}">${esc(b.t)}</button>`).join('')}</div>`)})}
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')fechaModal(null)});
+
+/* ========================================================= navegação */
+function go(view){if((S.view==='ponto'||S.view==='achado')&&view!=='ponto'&&view!=='achado')flush();S.view=view;render();window.scrollTo(0,0)}
+function render(){const v=S.view;if(v==='home')return vHome();if(v==='insp-form')return vInspForm();if(v==='insp')return vInsp();if(v==='ponto')return vPonto();if(v==='achado')return vAchado()}
+function header(titulo,sub,{back,menu}={}){
+ $('#hd').innerHTML=`${back?`<button class="ib" data-act="${back}" aria-label="Voltar">←</button>`:'<div class="logo">🌡</div>'}<div class="t"><h1>${esc(titulo)}</h1>${sub?`<div class="s">${esc(sub)}</div>`:''}</div>${menu?`<button class="ib" data-act="${menu}" aria-label="Menu">⋮</button>`:''}`;
+}
+const badge=k=>k?`<span class="bd ${CL[k].c}">${CL[k].n}</span>`:'<span class="bd wn">—</span>';
+function resumoP(p){const r={P1:0,P2:0,P3:0,N:0,tot:p.achados.length,max:null};for(const a of p.achados){const c=calc(a,p);if(c.cls)r[c.cls]++;if(c.tmax!=null&&(r.max==null||c.tmax>r.max))r.max=c.tmax}return r}
+
+/* ---------- HOME ---------- */
+async function vHome(){
+ header('Termografia','Registro de anomalias térmicas',{menu:'menuHome'});
+ const ins=(await getAll('insp')).sort((a,b)=>(b.data||'').localeCompare(a.data||'')||b.criado-a.criado);
+ const pts=await getAll('pontos');const cnt={};pts.forEach(p=>cnt[p.inspId]=(cnt[p.inspId]||0)+1);
+ $('#app').innerHTML=ins.length?ins.map(i=>`<button class="it-l" data-act="abrirInsp" data-id="${i.id}"><div class="m"><b>${esc(i.cliente||'Sem cliente')}</b><span>${esc([i.unidade,fmtData(i.data)].filter(Boolean).join(' · '))}</span></div><span class="bd wn">${cnt[i.id]||0}</span></button>`).join('')
+ :`<div class="empty"><b>Nenhuma inspeção ainda</b>Crie uma inspeção para começar a registrar os quadros.</div>`;
+ $('#bar').innerHTML=`<button class="btn acc blk" data-act="novaInsp">+ Nova inspeção</button>`;
+}
+/* ---------- FORM INSPEÇÃO ---------- */
+function vInspForm(){
+ const i=S.insp||{};
+ header(i.id?'Editar inspeção':'Nova inspeção','',{back:i.id?'voltaInsp':'home'});
+ $('#app').innerHTML=`<div class="card">
+ <div class="mb"><label class="lbl">Cliente</label><input class="i" id="f-cli" value="${esc(i.cliente)}" placeholder="Ex.: Saint-Gobain" autocomplete="off"></div>
+ <div class="mb"><label class="lbl">Unidade / local</label><input class="i" id="f-uni" value="${esc(i.unidade)}" placeholder="Ex.: Cuiabá – fábrica" autocomplete="off"></div>
+ <div class="mb"><label class="lbl">Responsável</label><input class="i" id="f-resp" value="${esc(i.resp??LS.get('resp',''))}" autocomplete="off"></div>
+ <div class="row mb"><div><label class="lbl">Data</label><input class="i" id="f-data" type="date" value="${esc(i.data||hoje())}"></div>
+ <div><label class="lbl">Emissividade</label><input class="i" id="f-emis" inputmode="decimal" value="${esc(i.emis??LS.get('emis','0,95'))}"></div></div>
+ <div class="mb"><label class="lbl">Câmera (modelo / nº série)</label><input class="i" id="f-cam" value="${esc(i.camera??LS.get('camera',''))}" placeholder="Ex.: FLIR E8 – 1234567" autocomplete="off"></div>
+ <div><label class="lbl">Condições (clima, carga da planta)</label><input class="i" id="f-cond" value="${esc(i.cond)}" placeholder="Ex.: céu aberto, produção normal" autocomplete="off"></div></div>`;
+ $('#bar').innerHTML=`<button class="btn pri blk" data-act="salvaInsp">${i.id?'Salvar':'Criar e começar'}</button>`;
+ if(!i.id)setTimeout(()=>$('#f-cli').focus(),50);
+}
+/* ---------- INSPEÇÃO ---------- */
+async function vInsp(){
+ const I=S.insp;
+ header(I.cliente||'Inspeção',[I.unidade,fmtData(I.data)].filter(Boolean).join(' · '),{back:'home',menu:'menuInsp'});
+ const pts=await pontosDe(I.id);
+ const t={P1:0,P2:0,P3:0,tot:0};pts.forEach(p=>{const r=resumoP(p);t.P1+=r.P1;t.P2+=r.P2;t.P3+=r.P3;t.tot+=r.tot});
+ const q=S.busca.trim().toLowerCase();
+ const vis=q?pts.filter(p=>[p.nome,p.tag,p.setor].join(' ').toLowerCase().includes(q)):pts;
+ $('#app').innerHTML=`<div class="card"><div class="stat"><div><b>${pts.length}</b><span>QUADROS</span></div><div><b>${t.tot}</b><span>ACHADOS</span></div><div><b style="color:var(--p1)">${t.P1}</b><span>IMEDIATA</span></div><div><b style="color:var(--p2)">${t.P2}</b><span>PROGRAM.</span></div><div><b style="color:var(--p3)">${t.P3}</b><span>MONITORAR</span></div></div>
+ <div class="row" style="margin-top:12px"><button class="btn sm" data-act="exportar">⬇ Exportar planilha</button><button class="btn sm" data-act="backup">💾 Backup</button></div></div>
+ ${pts.length>6?`<input class="i srch" id="busca" placeholder="Buscar quadro, tag ou setor" value="${esc(S.busca)}" autocomplete="off">`:''}
+ ${vis.map(p=>{const r=resumoP(p);return `<button class="it-l" data-act="abrirPonto" data-id="${p.id}"><span class="n">${p.ordem}</span><div class="m"><b>${esc(p.nome||p.tag||'(sem nome)')}</b><span>${esc([p.tag&&p.nome?p.tag:'',p.setor,r.tot?`${r.tot} achado${r.tot>1?'s':''}`:'sem anomalias'].filter(Boolean).join(' · '))}</span></div>${r.P1?`<span class="bd p1">${r.P1}</span>`:''}${r.P2?`<span class="bd p2">${r.P2}</span>`:''}${r.P3?`<span class="bd p3">${r.P3}</span>`:''}${!r.P1&&!r.P2&&!r.P3?'<span class="bd ok">✓</span>':''}</button>`}).join('')}
+ ${!pts.length?`<div class="empty"><b>Nenhum quadro registrado</b>Toque em “Novo quadro”. Registre também os quadros sem anomalia.</div>`:''}`;
+ $('#bar').innerHTML=`<button class="btn acc blk" data-act="novoPonto">+ Novo quadro</button>`;
+}
+/* ---------- QUADRO ---------- */
+function novoCur(base){return{id:uid(),inspId:S.insp.id,ordem:0,nome:'',tag:'',setor:base?.setor||'',tamb:base?.tamb||'',fotos:[],achados:[],obs:'',criado:Date.now(),novo:true}}
+const temConteudo=p=>!!(p.nome||p.tag||p.fotos.length||p.achados.length||p.obs);
+async function vPonto(){
+ const p=S.cur;
+ header(p.ordem?(p.nome||p.tag||'Quadro'):'Novo quadro',S.insp.cliente,{back:'voltaInsp',menu:p.ordem?'menuPonto':null});
+ const setores=[...new Set((await pontosDe(S.insp.id)).map(x=>x.setor).filter(Boolean))].slice(-8);
+ $('#app').innerHTML=`<div class="card">
+  <div class="row mb"><div style="flex:1.4"><label class="lbl">Quadro / painel</label><input class="i" data-f="nome" id="f-nome" value="${esc(p.nome)}" placeholder="Ex.: QGBT 01" autocomplete="off" enterkeyhint="next"></div>
+  <div><label class="lbl">Tag</label><input class="i" data-f="tag" id="f-tag" value="${esc(p.tag)}" placeholder="QD-01" autocomplete="off" autocapitalize="characters" enterkeyhint="next"></div></div>
+  <div class="mb"><label class="lbl">Setor</label><input class="i" data-f="setor" id="f-setor" value="${esc(p.setor)}" placeholder="Ex.: Ensacadeira" autocomplete="off" enterkeyhint="next">
+   ${setores.length?`<div class="chips" style="margin-top:7px">${setores.map(s=>`<button class="chip sm ${s===p.setor?'on':''}" data-act="setor" data-v="${esc(s)}">${esc(s)}</button>`).join('')}</div>`:''}</div>
+  <div class="row mb"><div><label class="lbl">T ambiente (°C)</label><div class="unit" data-u="°C"><input class="i" data-f="tamb" id="f-tamb" inputmode="decimal" value="${esc(p.tamb)}" placeholder="—"></div></div><div></div></div>
+  <div><label class="lbl">Fotos do quadro</label><div class="ph" id="ph-geral">${fotosHTML(p.fotos,'g')}</div></div>
+ </div>
+ <div class="sec">Achados térmicos</div>
+ <div id="achs">${p.achados.length?p.achados.map((a,i)=>{const c=calc(a,p);return `<button class="it-l" data-act="abrirAch" data-i="${i}"><div class="m"><b>${esc(eqNome(a))}${a.fase?` · ${esc(a.fase)}`:''}</b><span>${esc([a.ident,a.modelo].filter(Boolean).join(' · ')||'—')}</span></div><span class="tt">${c.tmax!=null?f1(c.tmax)+' °C':''}</span>${badge(c.cls)}</button>`}).join(''):`<div class="empty" style="padding:16px"><b style="font-size:16px">Sem anomalias registradas</b>Se o quadro estiver normal, apenas salve.</div>`}</div>
+ <button class="btn acc blk" data-act="novoAch" style="margin:6px 0 12px">+ Adicionar achado</button>
+ <div class="card"><label class="lbl">Observações do quadro</label><textarea class="i" data-f="obs" placeholder="Opcional">${esc(p.obs)}</textarea></div>`;
+ hidrataFotos();
+ $('#bar').innerHTML=`<button class="btn" data-act="salvarPonto" style="flex:.6">Salvar</button><button class="btn pri" data-act="salvarProx">Salvar e próximo →</button>`;
+}
+function fotosHTML(ids,alvo){return ids.map(id=>`<img class="th" data-foto="${id}" data-act="verFoto" data-id="${id}" data-alvo="${alvo}" alt="">`).join('')+`<button class="camb" data-act="foto" data-alvo="${alvo}">📷 Câmera</button><button class="camb" data-act="galeria" data-alvo="${alvo}">🖼 Galeria</button>`}
+
+/* ---------- ACHADO ---------- */
+function novoAch(){const u=LS.get('ultEq','term');return{id:uid(),eq:u,eqOutro:'',ident:'',modelo:'',inom:'',fase:'',local:'',tmax:'',tref:'',tamb:'',imed:'',mta:EQ[u]?.mta??'',mtaFonte:EQ[u]?.mta!=null?'Classe do cabo':'',ir:'',fir:[],fvis:[],causas:[],rec:'',recEd:false,cls:'',obs:''}}
+function recAuto(a){const l=a.causas.map(c=>CA[c]?.r).filter(Boolean);return [...l,REINSP].join(' ')}
+function vAchado(){
+ const a=S.ach,p=S.cur,idx=p.achados.indexOf(a);
+ header(idx<0?'Novo achado':eqNome(a),p.nome||p.tag||'Quadro',{back:'voltaPonto',menu:idx<0?null:'menuAch'});
+ const rec=LS.get('recEq',[]).filter(id=>EQ[id]).slice(0,6);
+ const quick=[...new Set([a.eq,...rec,'term','cab_hepr','dj_cx','fus_nh'])].filter(id=>EQ[id]).slice(0,8);
+ const modelos=LS.get('modelos',[]);
+ const eq=EQ[a.eq]||{};
+ $('#app').innerHTML=`
+ <div class="card">
+  <label class="lbl">Equipamento / material</label>
+  <div class="chips mb" id="eqs">${quick.map(id=>`<button class="chip sm ${id===a.eq?'on':''}" data-act="eq" data-v="${id}">${esc(EQ[id].n)}</button>`).join('')}<button class="chip sm more" data-act="eqTodos">Todos ▾</button></div>
+  <div id="eqOutro" class="mb" style="${a.eq==='out'?'':'display:none'}"><input class="i" data-a="eqOutro" value="${esc(a.eqOutro)}" placeholder="Descreva o equipamento"></div>
+  <div class="mb"><label class="lbl">Identificação no quadro</label><input class="i" data-a="ident" value="${esc(a.ident)}" placeholder="Ex.: Disjuntor geral · Circuito 5 bomba" autocomplete="off"></div>
+  <div class="row mb"><div style="flex:1.6"><label class="lbl">Fabricante / modelo</label><input class="i" data-a="modelo" list="dl-mod" value="${esc(a.modelo)}" placeholder="Ex.: WEG DWB160" autocomplete="off"><datalist id="dl-mod">${modelos.map(m=>`<option value="${esc(m)}">`).join('')}</datalist></div>
+  <div><label class="lbl">I nominal</label><div class="unit" data-u="A"><input class="i" data-a="inom" inputmode="decimal" value="${esc(a.inom)}" placeholder="—"></div></div></div>
+  <div class="mb"><label class="lbl">Fase</label><div class="chips">${FASES.map(f=>`<button class="chip sm ${f===a.fase?'on':''}" data-act="fase" data-v="${f}">${f==='3F'?'Trifásico':f}</button>`).join('')}</div></div>
+  <div><label class="lbl">Local do aquecimento</label><div class="chips">${LOCAIS.map(f=>`<button class="chip sm ${f===a.local?'on':''}" data-act="local" data-v="${esc(f)}">${esc(f)}</button>`).join('')}</div></div>
+ </div>
+ <div class="card">
+  <div class="row mb">
+   <div><label class="lbl">T máx</label><input class="i num" data-a="tmax" id="f-tmax" inputmode="decimal" value="${esc(a.tmax)}" placeholder="°C"></div>
+   <div><label class="lbl">T ref.</label><input class="i num" data-a="tref" inputmode="decimal" value="${esc(a.tref)}" placeholder="°C"></div>
+   <div><label class="lbl">T amb.</label><input class="i num" data-a="tamb" inputmode="decimal" value="${esc(a.tamb)}" placeholder="${esc(p.tamb||'°C')}"></div>
+  </div>
+  <div class="hint mb">T ref. = mesmo componente em outra fase, nas mesmas condições.</div>
+  <div class="row mb"><div><label class="lbl">I medida</label><div class="unit" data-u="A"><input class="i" data-a="imed" inputmode="decimal" value="${esc(a.imed)}" placeholder="—"></div></div>
+  <div><label class="lbl">MTA</label><div class="unit" data-u="°C"><input class="i" data-a="mta" id="f-mta" inputmode="decimal" value="${esc(a.mta)}" placeholder="pesquisar"></div></div></div>
+  ${eq.cab||eq.ins?`<div class="chips mb">${eq.cab?`<button class="chip sm" data-act="mtaSet" data-v="70" data-f="Cabo PVC 70 °C">PVC 70</button><button class="chip sm" data-act="mtaSet" data-v="90" data-f="Cabo HEPR/EPR/XLPE 90 °C">HEPR/XLPE 90</button>`:''}${eq.ins?CLASSES.map(([c,t])=>`<button class="chip sm" data-act="mtaSet" data-v="${t}" data-f="Classe de isolação ${c}">Classe ${c} ${t}</button>`).join(''):''}</div>`:''}
+  <div class="hint" id="mtaHint">${eq.h?esc(eq.h)+' ':''}${a.mta===''||a.mta==null?'Sem MTA: informe fabricante/modelo para pesquisar — sairá na aba “MTA a pesquisar”.':(a.mtaFonte?'Fonte: '+esc(a.mtaFonte):'')}</div>
+ </div>
+ <div id="res"></div>
+ <div class="card">
+  <label class="lbl">Imagem térmica</label>
+  <div class="mb"><input class="i" data-a="ir" value="${esc(a.ir)}" placeholder="Nº/arquivo na câmera (ex.: IR_0123)" autocomplete="off"></div>
+  <div class="ph mb" id="ph-fir">${fotosHTML(a.fir,'fir')}</div>
+  <label class="lbl">Foto visual</label>
+  <div class="ph" id="ph-fvis">${fotosHTML(a.fvis,'fvis')}</div>
+ </div>
+ <div class="card">
+  <label class="lbl">Causa provável</label>
+  <div class="chips mb">${CAUSAS.map(c=>`<button class="chip sm ${a.causas.includes(c.id)?'on':''}" data-act="causa" data-v="${c.id}">${esc(c.n)}</button>`).join('')}</div>
+  <label class="lbl">Recomendação</label>
+  <textarea class="i mb" data-a="rec" id="f-rec">${esc(a.recEd?a.rec:recAuto(a))}</textarea>
+  <label class="lbl">Observação</label>
+  <input class="i" data-a="obs" value="${esc(a.obs)}" placeholder="Opcional" autocomplete="off">
+ </div>`;
+ renderRes();hidrataFotos();
+ $('#bar').innerHTML=`<button class="btn" data-act="salvarAch" style="flex:.6">Salvar</button><button class="btn pri" data-act="salvarAchNovo">Salvar e novo achado</button>`;
+}
+function renderRes(){
+ const a=S.ach,c=calc(a,S.cur),k=c.cls;
+ const cell=(v,l,u='°C')=>`<div><b>${v==null?'—':f1(v)+(u?` <small style="font-size:12px">${u}</small>`:'')}</b><span>${l}</span></div>`;
+ $('#res').innerHTML=`<div class="res ${k||''}"><div class="g">${cell(c.dtr,'ΔT ref.')}${cell(c.dta,'ΔT amb.')}${cell(c.carga!=null?c.carga*100:null,'Carga','%')}${cell(c.tcorr,'T corrigida')}${cell(c.mta,'MTA')}${cell(c.margem,'Margem MTA')}</div>
+ <div class="cls">${['P1','P2','P3','N'].map(x=>`<button class="${x} ${x===k?'on':''}" data-act="cls" data-v="${x}">${CL[x].n}${x===c.sug?'<span class="sg">sugerida</span>':''}</button>`).join('')}</div>
+ ${c.baixa?`<div class="warn">Carga abaixo de 40% da nominal: a correção amplifica o ΔT. Avalie com cautela.</div>`:''}
+ ${a.cls&&a.cls!==c.sug&&c.sug?`<div class="hint" style="margin-top:6px">Classificação alterada manualmente (sugerida: ${CL[c.sug].n}).</div>`:''}</div>`;
+}
+
+/* ---------- salvar ---------- */
+function agendaSalvar(){clearTimeout(S.saveT);S.saveT=setTimeout(flush,500)}
+async function flush(){clearTimeout(S.saveT);const p=S.cur;if(!p||!temConteudo(p))return;if(!p.ordem){const pts=await pontosDe(p.inspId);p.ordem=pts.reduce((m,x)=>Math.max(m,x.ordem),0)+1}p.atual=Date.now();const c=JSON.parse(JSON.stringify(p));delete c.novo;await put('pontos',c)}
+async function salvarPonto(prox){
+ const p=S.cur;
+ if(!p.nome.trim()&&!p.tag.trim()){toast('Informe o nome ou a tag do quadro');$('#f-nome').focus();return}
+ await flush();vib();const nm=p.nome||p.tag;
+ if(prox){S.cur=novoCur(p);render();window.scrollTo(0,0);toast(`✓ ${nm} salvo`);setTimeout(()=>$('#f-nome')?.focus(),80)}
+ else{toast(`✓ ${nm} salvo`);go('insp')}
+}
+function anexaAch(){const p=S.cur,a=S.ach;if(!p.achados.includes(a))p.achados.push(a)}
+async function salvarAch(novo){
+ const a=S.ach;
+ if(num(a.tmax)==null){toast('Informe a T máx');$('#f-tmax').focus();return}
+ if(a.eq==='out'&&!a.eqOutro.trim()){toast('Descreva o equipamento');return}
+ if(!a.recEd)a.rec=recAuto(a);
+ anexaAch();
+ if(a.modelo.trim()){const m=LS.get('modelos',[]);LS.set('modelos',[a.modelo.trim(),...m.filter(x=>x!==a.modelo.trim())].slice(0,40))}
+ LS.set('ultEq',a.eq);const r=LS.get('recEq',[]);LS.set('recEq',[a.eq,...r.filter(x=>x!==a.eq)].slice(0,6));
+ await flush();vib();toast(`✓ Achado salvo (${CL[calc(a,S.cur).cls]?.n||'sem classificação'})`);
+ if(novo){const b=novoAch();b.eq=a.eq;b.mta=a.mta;b.mtaFonte=a.mtaFonte;b.tamb=a.tamb;S.ach=b;render();window.scrollTo(0,0);setTimeout(()=>$('#f-tmax')?.focus(),80)}
+ else{S.ach=null;go('ponto')}
+}
+
+/* ---------- fotos ---------- */
+async function comprime(file){
+ const url=URL.createObjectURL(file);
+ try{const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=url});
+  const M=1600;let w=img.naturalWidth,h=img.naturalHeight;const k=Math.min(1,M/Math.max(w,h));w=Math.round(w*k);h=Math.round(h*k);
+  const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+  return await new Promise(r=>c.toBlob(b=>r(b||file),'image/jpeg',0.8));
+ }catch{return file}finally{URL.revokeObjectURL(url)}
+}
+function listaFotos(alvo){return alvo==='g'?S.cur.fotos:S.ach[alvo]}
+function rerenderFotos(alvo){const el=$('#ph-'+(alvo==='g'?'geral':alvo));if(el){el.innerHTML=fotosHTML(listaFotos(alvo),alvo);hidrataFotos(el)}}
+async function recebeFotos(files){
+ const alvo=S.photoTarget;if(!files.length||!alvo||!S.cur)return;
+ for(const f of files){const blob=await comprime(f);const id=uid();await put('fotos',{id,blob});listaFotos(alvo).push(id)}
+ rerenderFotos(alvo);if(alvo!=='g')anexaAch();agendaSalvar();
+}
+['cam','gal'].forEach(id=>$('#'+id).addEventListener('change',async e=>{const fs=[...e.target.files];e.target.value='';await recebeFotos(fs)}));
+
+/* ========================================================= EXPORTAÇÃO (XLSX + fotos em ZIP) */
+const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+function crc32(u){let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=CRC[(c^u[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
+function zipBlob(files,type='application/zip'){
+ const enc=new TextEncoder(),parts=[],cen=[];let off=0;const d=new Date();
+ const dt=((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate(),tm=(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1);
+ for(const f of files){const nm=enc.encode(f.name),data=typeof f.data==='string'?enc.encode(f.data):f.data,crc=crc32(data),sz=data.length;
+  const l=new DataView(new ArrayBuffer(30));l.setUint32(0,0x04034b50,true);l.setUint16(4,20,true);l.setUint16(6,0x0800,true);l.setUint16(10,tm,true);l.setUint16(12,dt,true);l.setUint32(14,crc,true);l.setUint32(18,sz,true);l.setUint32(22,sz,true);l.setUint16(26,nm.length,true);
+  parts.push(new Uint8Array(l.buffer),nm,data);
+  const c=new DataView(new ArrayBuffer(46));c.setUint32(0,0x02014b50,true);c.setUint16(4,20,true);c.setUint16(6,20,true);c.setUint16(8,0x0800,true);c.setUint16(12,tm,true);c.setUint16(14,dt,true);c.setUint32(16,crc,true);c.setUint32(20,sz,true);c.setUint32(24,sz,true);c.setUint16(28,nm.length,true);c.setUint32(42,off,true);
+  cen.push(new Uint8Array(c.buffer),nm);off+=30+nm.length+sz}
+ const cs=cen.reduce((a,b)=>a+b.length,0);const e=new DataView(new ArrayBuffer(22));e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,cs,true);e.setUint32(16,off,true);
+ return new Blob([...parts,...cen,new Uint8Array(e.buffer)],{type});
+}
+const colL=i=>{let s='';i++;while(i>0){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26)}return s};
+const xesc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])).replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,'');
+function sheetXml(sh){
+ const rows=[sh.cols.map(c=>c.h),...sh.rows];
+ let x=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0">${sh.freeze!==false?'<pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/>':''}</sheetView></sheetViews><cols>`;
+ sh.cols.forEach((c,i)=>x+=`<col min="${i+1}" max="${i+1}" width="${c.w}" customWidth="1"/>`);
+ x+='</cols><sheetData>';
+ rows.forEach((r,ri)=>{x+=`<row r="${ri+1}"${ri===0&&sh.freeze!==false?' ht="30" customHeight="1"':''}>`;r.forEach((v,ci)=>{const ref=colL(ci)+(ri+1);const s=ri===0&&sh.freeze!==false?1:(sh.style?sh.style(ri-1,ci,v):2);
+  x+=typeof v==='number'?`<c r="${ref}" s="${s}"><v>${v}</v></c>`:`<c r="${ref}" s="${s}" t="inlineStr"><is><t xml:space="preserve">${xesc(v)}</t></is></c>`});x+='</row>'});
+ x+='</sheetData>';
+ if(sh.filter&&sh.rows.length)x+=`<autoFilter ref="A1:${colL(sh.cols.length-1)}${rows.length}"/>`;
+ return x+'</worksheet>';
+}
+async function xlsxBytes(sheets){
+ const NS='http://schemas.openxmlformats.org/';
+ const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="${NS}spreadsheetml/2006/main"><fonts count="3"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="6"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF14181F"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFECACA"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFDE68A"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFBFDBFE"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border><border><left style="thin"><color rgb="FFCBD5E1"/></left><right style="thin"><color rgb="FFCBD5E1"/></right><top style="thin"><color rgb="FFCBD5E1"/></top><bottom style="thin"><color rgb="FFCBD5E1"/></bottom><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="7"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf><xf numFmtId="0" fontId="2" fillId="3" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="top"/></xf><xf numFmtId="0" fontId="2" fillId="4" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="top"/></xf><xf numFmtId="0" fontId="2" fillId="5" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="top"/></xf><xf numFmtId="0" fontId="2" fillId="0" borderId="1" xfId="0" applyFont="1" applyBorder="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
+ const dn=sheets.map((s,i)=>s.filter&&s.rows.length?`<definedName name="_xlnm._FilterDatabase" localSheetId="${i}" hidden="1">'${s.name}'!$A$1:$${colL(s.cols.length-1)}$${s.rows.length+1}</definedName>`:'').join('');
+ const files=[
+  {name:'[Content_Types].xml',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="${NS}package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>${sheets.map((s,i)=>`<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('')}</Types>`},
+  {name:'_rels/.rels',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="${NS}package/2006/relationships"><Relationship Id="rId1" Type="${NS}officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`},
+  {name:'xl/workbook.xml',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="${NS}spreadsheetml/2006/main" xmlns:r="${NS}officeDocument/2006/relationships"><sheets>${sheets.map((s,i)=>`<sheet name="${xesc(s.name)}" sheetId="${i+1}" r:id="rId${i+1}"/>`).join('')}</sheets>${dn?`<definedNames>${dn}</definedNames>`:''}</workbook>`},
+  {name:'xl/_rels/workbook.xml.rels',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="${NS}package/2006/relationships">${sheets.map((s,i)=>`<Relationship Id="rId${i+1}" Type="${NS}officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join('')}<Relationship Id="rId${sheets.length+1}" Type="${NS}officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`},
+  {name:'xl/styles.xml',data:styles},
+  ...sheets.map((s,i)=>({name:`xl/worksheets/sheet${i+1}.xml`,data:sheetXml(s)}))
+ ];
+ return new Uint8Array(await zipBlob(files).arrayBuffer());
+}
+const slug=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9-]+/g,'_').replace(/^_+|_+$/g,'').slice(0,40);
+function baixar(blob,nome){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=nome;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000)}
+async function compartilhar(blob,nome){const f=new File([blob],nome,{type:blob.type});try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:nome});return true}}catch(e){if(e.name==='AbortError')return true}return false}
+const STL={P1:3,P2:4,P3:5};
+async function montaExport(){
+ const I=S.insp,pts=await pontosDe(I.id),fotos=[];
+ const anom=[],quad=[],mtaP=new Map();let n=0;
+ const addF=(ids,base)=>ids.map((id,k)=>{const nm=`fotos/${base}_${k+1}.jpg`;fotos.push({id,nm});return nm.slice(6)});
+ for(const p of pts){
+  const pid=String(p.ordem).padStart(2,'0')+'_'+(slug(p.tag||p.nome)||'quadro');const r=resumoP(p);
+  quad.push([p.ordem,p.nome,p.tag,p.setor,num(p.tamb)??'',r.tot,r.P1,r.P2,r.P3,r.max??'',r.tot?(r.P1?'Imediata':r.P2?'Programada':r.P3?'Monitorar':'Normal'):'Sem anomalias',p.obs,addF(p.fotos,pid+'_quadro').join(', ')]);
+  p.achados.forEach((a,i)=>{
+   const c=calc(a,p);n++;const aid=`${pid}_A${i+1}`;
+   const v=x=>x==null?'':Math.round(x*10)/10;
+   anom.push([n,p.nome,p.tag,p.setor,eqNome(a),a.ident,a.modelo,num(a.inom)??'',a.fase==='3F'?'Trifásico':a.fase,a.local,v(c.tmax),v(c.tref),v(c.dtr),v(c.tamb),v(c.dta),v(c.im),c.carga!=null?Math.round(c.carga*100):'',v(c.tcorr),v(c.mta),a.mtaFonte||(c.mta==null?'A pesquisar':''),v(c.margem),c.cls?CL[c.cls].n:'',c.sug&&c.cls!==c.sug?CL[c.sug].n:'',a.causas.map(x=>CA[x]?.n).filter(Boolean).join('; '),a.recEd?a.rec:recAuto(a),a.ir,addF(a.fir,aid+'_IR').join(', '),addF(a.fvis,aid+'_visual').join(', '),a.obs,'','','Aberto',c.cls||'']);
+   if(c.mta==null){const k=(eqNome(a)+'|'+(a.modelo||'(modelo não informado)'));const e=mtaP.get(k)||{eq:eqNome(a),mod:a.modelo||'(modelo não informado)',inom:a.inom,q:[]};e.q.push(`${p.tag||p.nome} – ${a.ident||'achado '+(i+1)}`);mtaP.set(k,e)}
+  });
+ }
+ const ord={P1:0,P2:1,P3:2,N:3,'':4};anom.sort((x,y)=>ord[x[x.length-1]]-ord[y[y.length-1]]||x[0]-y[0]);anom.forEach((r,i)=>{r[0]=i+1;r.pop()});
+ const ac=['Nº','Quadro','Tag','Setor','Equipamento','Identificação','Fabricante / modelo','I nominal (A)','Fase','Local','T máx (°C)','T ref (°C)','ΔT ref (°C)','T amb (°C)','ΔT amb (°C)','I medida (A)','Carga (%)','T corrigida (°C)','MTA (°C)','Fonte da MTA','Margem MTA (°C)','Classificação','Sugerida (se alterada)','Causa provável','Recomendação','Imagem IR (câmera)','Fotos IR','Fotos visuais','Observação','Responsável','Prazo','Status'];
+ const aw=[5,22,10,14,24,22,22,9,9,14,9,9,9,9,9,9,8,10,8,18,10,12,12,24,40,14,24,24,24,14,10,9];
+ const sheets=[
+  {name:'Anomalias',filter:true,cols:ac.map((h,i)=>({h,w:aw[i]})),rows:anom,style:(r,c,v)=>c===21?({'Imediata':3,'Programada':4,'Monitorar':5}[v]||2):(c===1||c===4?6:2)},
+  {name:'Quadros inspecionados',filter:true,cols:[{h:'Nº',w:5},{h:'Quadro',w:26},{h:'Tag',w:11},{h:'Setor',w:16},{h:'T amb (°C)',w:10},{h:'Achados',w:9},{h:'Imediata',w:9},{h:'Programada',w:11},{h:'Monitorar',w:10},{h:'T máx (°C)',w:10},{h:'Situação',w:16},{h:'Observações',w:30},{h:'Fotos do quadro',w:30}],rows:quad,style:(r,c,v)=>c===6&&v?3:c===7&&v?4:c===8&&v?5:c===1?6:2},
+  {name:'MTA a pesquisar',filter:true,cols:[{h:'Equipamento',w:28},{h:'Fabricante / modelo',w:30},{h:'I nominal (A)',w:12},{h:'Onde aparece',w:50},{h:'MTA encontrada (°C)',w:16},{h:'Fonte (catálogo/norma)',w:30}],rows:[...mtaP.values()].map(e=>[e.eq,e.mod,num(e.inom)??'',e.q.join('; '),'','']),style:(r,c)=>c===1?6:2},
+  {name:'Inspeção',freeze:false,cols:[{h:'Campo',w:26},{h:'Valor',w:90}],rows:[['Cliente',I.cliente],['Unidade / local',I.unidade],['Responsável',I.resp],['Data',fmtData(I.data)],['Câmera',I.camera],['Emissividade',I.emis],['Condições',I.cond],['Quadros inspecionados',pts.length],['Achados',anom.length],['Critério de classificação',CRITERIO],['Gerado em',new Date().toLocaleString('pt-BR')]],style:(r,c)=>c===0?6:2}
+ ];
+ const xb=await xlsxBytes(sheets);
+ const nomeBase=`Termografia_${slug(I.cliente)||'inspecao'}_${I.data||hoje()}`;
+ const files=[{name:`${nomeBase}.xlsx`,data:xb}];
+ for(const f of fotos){const r=await get('fotos',f.id);if(r)files.push({name:f.nm,data:new Uint8Array(await r.blob.arrayBuffer())})}
+ return{blob:zipBlob(files),nome:nomeBase+'.zip',xlsx:new Blob([xb],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),xnome:nomeBase+'.xlsx',nf:fotos.length,na:anom.length,nm:mtaP.size};
+}
+const b2d=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)});
+async function d2b(d){return(await fetch(d)).blob()}
+async function fazBackup(){const I=S.insp,pts=await pontosDe(I.id),fotos={};for(const p of pts)for(const id of fotosPonto(p)){const f=await get('fotos',id);if(f)fotos[id]=await b2d(f.blob)}return new Blob([JSON.stringify({app:'termo-insp',v:1,insp:I,pontos:pts,fotos})],{type:'application/json'})}
+async function importa(file){try{const j=JSON.parse(await file.text());if(j.app!=='termo-insp')throw 0;for(const [id,d] of Object.entries(j.fotos||{}))await put('fotos',{id,blob:await d2b(d)});await put('insp',j.insp);for(const p of j.pontos)await put('pontos',p);toast('Backup importado');S.insp=j.insp;go('insp')}catch{toast('Arquivo de backup inválido')}}
+$('#imp').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';if(f)importa(f)});
+
+/* ========================================================= AÇÕES */
+const A={
+ mres:b=>fechaModal(b.dataset.v),fecha:()=>fechaModal(null),
+ home:()=>{S.insp=null;go('home')},
+ novaInsp:()=>{S.insp=null;go('insp-form')},
+ abrirInsp:async b=>{S.insp=await get('insp',b.dataset.id);S.busca='';go('insp')},
+ voltaInsp:async()=>{await flush();S.cur=null;go('insp')},
+ voltaPonto:async()=>{const a=S.ach;if(a&&!S.cur.achados.includes(a)&&(num(a.tmax)!=null||a.fir.length||a.fvis.length)){if(!a.recEd)a.rec=recAuto(a);anexaAch()}await flush();S.ach=null;go('ponto')},
+ salvaInsp:async()=>{const i=S.insp?{...S.insp}:{id:uid(),criado:Date.now()};i.cliente=$('#f-cli').value.trim();i.unidade=$('#f-uni').value.trim();i.resp=$('#f-resp').value.trim();i.data=$('#f-data').value;i.emis=$('#f-emis').value.trim();i.camera=$('#f-cam').value.trim();i.cond=$('#f-cond').value.trim();
+  if(!i.cliente){toast('Informe o cliente');return}LS.set('resp',i.resp);LS.set('emis',i.emis);LS.set('camera',i.camera);await put('insp',i);S.insp=i;go('insp')},
+ menuHome:()=>modal(`<h3>Menu</h3><div class="acts"><button class="btn blk" data-act="importar">📂 Importar backup (.json)</button><button class="btn blk" data-act="sobre">ℹ Critério de classificação</button><button class="btn blk" data-act="fecha">Fechar</button></div>`),
+ importar:()=>{fechaModal();$('#imp').click()},
+ sobre:()=>modal(`<h3>Critério de classificação</h3><p style="font-size:14.5px">${esc(CRITERIO)}</p><p class="hint">MTA pré-preenchida apenas para cabos (classe de temperatura da isolação) e, por escolha, classes de isolação (A 105 · E 120 · B 130 · F 155 · H 180 °C). Demais componentes: MTA do fabricante — a aba “MTA a pesquisar” lista os modelos.</p><p class="hint">Os dados ficam só neste celular. Exporte ou faça backup ao final de cada inspeção.</p><div class="acts"><button class="btn blk" data-act="fecha">Fechar</button></div>`),
+ menuInsp:()=>modal(`<h3>${esc(S.insp.cliente)}</h3><div class="acts"><button class="btn blk" data-act="editInsp">✏ Editar dados da inspeção</button><button class="btn blk" data-act="exportar">⬇ Exportar planilha</button><button class="btn blk" data-act="backup">💾 Backup</button><button class="btn blk" data-act="sobre">ℹ Critério de classificação</button><button class="btn blk red" data-act="delInsp">Excluir inspeção</button><button class="btn blk" data-act="fecha">Fechar</button></div>`),
+ editInsp:()=>{fechaModal();go('insp-form')},
+ delInsp:async()=>{fechaModal();const v=await ask('Excluir inspeção?','Todos os quadros, achados e fotos desta inspeção serão apagados deste celular.',[{t:'Excluir',v:'y',c:'red'},{t:'Cancelar',v:'n'}]);if(v!=='y')return;
+  for(const p of await pontosDe(S.insp.id)){for(const id of fotosPonto(p))await del('fotos',id);await del('pontos',p.id)}await del('insp',S.insp.id);S.insp=null;toast('Inspeção excluída');go('home')},
+ exportar:async()=>{fechaModal();modal('<h3>Gerando planilha…</h3><p>Aguarde.</p>');
+  try{const r=await montaExport();S.exp=r;modal(`<h3>Planilha pronta</h3><p>${r.na} achados · ${r.nm} modelo(s) sem MTA · ${r.nf} fotos.<br><span class="hint">O .zip contém a planilha e a pasta de fotos (nomes citados nas colunas de fotos).</span></p><div class="acts"><button class="btn blk pri" data-act="expShare">📤 Compartilhar (WhatsApp, e-mail, Drive)</button><button class="btn blk" data-act="expZip">⬇ Baixar .zip (planilha + fotos)</button><button class="btn blk" data-act="expXlsx">⬇ Baixar só a planilha</button><button class="btn blk" data-act="fecha">Fechar</button></div>`)}
+  catch(e){console.error(e);modal(`<h3>Erro ao exportar</h3><p>${esc(e.message||e)}</p><div class="acts"><button class="btn blk" data-act="fecha">Fechar</button></div>`)}},
+ expShare:async()=>{const r=S.exp;if(!await compartilhar(r.blob,r.nome)){baixar(r.blob,r.nome);toast('Compartilhamento indisponível — arquivo baixado')}},
+ expZip:()=>{baixar(S.exp.blob,S.exp.nome);toast('Salvo em Downloads')},
+ expXlsx:()=>{baixar(S.exp.xlsx,S.exp.xnome);toast('Salvo em Downloads')},
+ backup:async()=>{fechaModal();toast('Gerando backup…');const b=await fazBackup();const nm=`backup_termografia_${slug(S.insp.cliente)}_${hoje()}.json`;if(!await compartilhar(b,nm))baixar(b,nm)},
+ novoPonto:async()=>{const pts=await pontosDe(S.insp.id);S.cur=novoCur(pts[pts.length-1]||null);go('ponto');setTimeout(()=>$('#f-nome')?.focus(),80)},
+ abrirPonto:async b=>{S.cur=await get('pontos',b.dataset.id);go('ponto')},
+ menuPonto:()=>modal(`<h3>${esc(S.cur.nome||S.cur.tag)}</h3><div class="acts"><button class="btn blk red" data-act="delPonto">Excluir quadro</button><button class="btn blk" data-act="fecha">Fechar</button></div>`),
+ delPonto:async()=>{fechaModal();const v=await ask('Excluir quadro?','O quadro, seus achados e fotos serão apagados.',[{t:'Excluir',v:'y',c:'red'},{t:'Cancelar',v:'n'}]);if(v!=='y')return;const p=S.cur;for(const id of fotosPonto(p))await del('fotos',id);await del('pontos',p.id);S.cur=null;toast('Quadro excluído');go('insp')},
+ setor:b=>{S.cur.setor=b.dataset.v;$('#f-setor').value=b.dataset.v;document.querySelectorAll('[data-act=setor]').forEach(x=>x.classList.toggle('on',x.dataset.v===S.cur.setor));agendaSalvar()},
+ novoAch:()=>{if(!S.cur.nome.trim()&&!S.cur.tag.trim()){toast('Informe antes o nome ou a tag do quadro');$('#f-nome').focus();return}S.ach=novoAch();go('achado');setTimeout(()=>$('#f-tmax')?.focus(),80)},
+ abrirAch:b=>{S.ach=S.cur.achados[+b.dataset.i];go('achado')},
+ menuAch:()=>modal(`<h3>${esc(eqNome(S.ach))}</h3><div class="acts"><button class="btn blk" data-act="dupAch">⧉ Duplicar (outra fase/circuito)</button><button class="btn blk red" data-act="delAch">Excluir achado</button><button class="btn blk" data-act="fecha">Fechar</button></div>`),
+ dupAch:()=>{fechaModal();const a=JSON.parse(JSON.stringify(S.ach));a.id=uid();a.fir=[];a.fvis=[];a.tmax='';a.tref='';a.imed='';a.ir='';a.fase='';a.cls='';S.ach=a;render();toast('Cópia criada — informe fase e temperaturas');setTimeout(()=>$('#f-tmax')?.focus(),80)},
+ delAch:async()=>{fechaModal();const v=await ask('Excluir achado?','',[{t:'Excluir',v:'y',c:'red'},{t:'Cancelar',v:'n'}]);if(v!=='y')return;const a=S.ach;for(const id of [...a.fir,...a.fvis])await del('fotos',id);S.cur.achados=S.cur.achados.filter(x=>x!==a);S.ach=null;await flush();go('ponto')},
+ eq:b=>setEq(b.dataset.v),
+ eqTodos:()=>modal(`<h3>Equipamento / material</h3>${EQ_GRUPOS.map(g=>`<h4>${esc(g.n)}</h4><div class="chips">${g.it.map(e=>`<button class="chip sm ${e.id===S.ach.eq?'on':''}" data-act="eqPick" data-v="${e.id}">${esc(e.n)}</button>`).join('')}</div>`).join('')}<div class="acts" style="margin-top:16px"><button class="btn blk" data-act="fecha">Fechar</button></div>`),
+ eqPick:b=>{fechaModal();setEq(b.dataset.v)},
+ fase:b=>{S.ach.fase=S.ach.fase===b.dataset.v?'':b.dataset.v;b.parentNode.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x.dataset.v===S.ach.fase))},
+ local:b=>{S.ach.local=S.ach.local===b.dataset.v?'':b.dataset.v;b.parentNode.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x.dataset.v===S.ach.local))},
+ mtaSet:b=>{S.ach.mta=b.dataset.v;S.ach.mtaFonte=b.dataset.f;$('#f-mta').value=b.dataset.v;$('#mtaHint').textContent='Fonte: '+b.dataset.f;S.ach.cls='';renderRes()},
+ cls:b=>{const c=calc(S.ach,S.cur);S.ach.cls=b.dataset.v===c.sug?'':b.dataset.v;renderRes();agendaSalvar();vib()},
+ causa:b=>{const a=S.ach,v=b.dataset.v;a.causas=a.causas.includes(v)?a.causas.filter(x=>x!==v):[...a.causas,v];b.classList.toggle('on');
+  if(!a.recEd)$('#f-rec').value=recAuto(a);else toast('Recomendação editada manualmente — não substituída')},
+ foto:b=>{S.photoTarget=b.dataset.alvo;$('#cam').click()},
+ galeria:b=>{S.photoTarget=b.dataset.alvo;$('#gal').click()},
+ verFoto:async b=>{const u=await fotoURL(b.dataset.id);modal(`<img class="full" src="${u}" alt=""><div class="acts"><button class="btn blk red" data-act="delFoto" data-id="${b.dataset.id}" data-alvo="${b.dataset.alvo}">Excluir foto</button><button class="btn blk" data-act="fecha">Fechar</button></div>`)},
+ delFoto:async b=>{const id=b.dataset.id,alvo=b.dataset.alvo;fechaModal();const l=listaFotos(alvo);const i=l.indexOf(id);if(i>=0)l.splice(i,1);rerenderFotos(alvo);await del('fotos',id);await flush()},
+ salvarPonto:()=>salvarPonto(false),salvarProx:()=>salvarPonto(true),
+ salvarAch:()=>salvarAch(false),salvarAchNovo:()=>salvarAch(true)
+};
+function setEq(id){const a=S.ach,e=EQ[id];a.eq=id;if(e.mta!=null){a.mta=String(e.mta);a.mtaFonte='Classe do cabo'}else if(a.mtaFonte==='Classe do cabo'){a.mta='';a.mtaFonte=''}a.cls='';render()}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;e.preventDefault();const f=A[b.dataset.act];if(f)f(b,e)});
+document.addEventListener('input',e=>{
+ const t=e.target;
+ if(t.id==='busca'){S.busca=t.value;clearTimeout(S.bT);S.bT=setTimeout(async()=>{const pos=t.selectionStart;await vInsp();const n=$('#busca');if(n){n.focus();n.setSelectionRange(pos,pos)}},250);return}
+ if(S.view==='ponto'&&t.dataset.f){S.cur[t.dataset.f]=t.value;if(t.dataset.f==='setor')document.querySelectorAll('[data-act=setor]').forEach(x=>x.classList.toggle('on',x.dataset.v===t.value));agendaSalvar()}
+ if(S.view==='achado'&&t.dataset.a){const k=t.dataset.a,a=S.ach;a[k]=t.value;
+  if(k==='rec')a.recEd=true;
+  if(k==='mta'){a.mtaFonte=t.value?'Informada pelo inspetor':'';$('#mtaHint').textContent=t.value?'Fonte: informada pelo inspetor':'Sem MTA: informe fabricante/modelo para pesquisar.'}
+  if(k==='eqOutro'){}
+  if(['tmax','tref','tamb','imed','inom','mta'].includes(k)){a.cls='';renderRes()}
+  if(S.cur.achados.includes(a))agendaSalvar()}
+});
+document.addEventListener('keydown',e=>{if(e.key!=='Enter'||e.target.tagName!=='INPUT')return;const ord=['f-nome','f-tag','f-setor','f-tamb'];const i=ord.indexOf(e.target.id);if(i>=0){e.preventDefault();if(i<ord.length-1)$('#'+ord[i+1]).focus();else e.target.blur()}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&(S.view==='ponto'||S.view==='achado'))flush()});
+
+(async()=>{
+ try{db=await openDB()}catch(e){$('#app').innerHTML='<div class="empty"><b>Armazenamento indisponível</b>Abra o app pelo Chrome, fora da aba anônima.</div>';return}
+ try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch{}
+ if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
+ render();
+})();
+</script>
+</body>
+</html>

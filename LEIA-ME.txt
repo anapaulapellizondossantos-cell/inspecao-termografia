@@ -1,0 +1,12 @@
+TERMOGRAFIA — app offline para Android
+
+Publicação: igual ao app NR-10, mas em um repositório NOVO (ex.: "termografia"):
+1. GitHub > New repository > "termografia" (público) > Create.
+2. "uploading an existing file" > envie os 5 arquivos (index.html, sw.js,
+   manifest.webmanifest, icon-192.png, icon-512.png) > Commit changes.
+3. Settings > Pages > Deploy from a branch > main / (root) > Save.
+4. Abra https://SEU-USUARIO.github.io/termografia/ no Chrome do celular >
+   ⋮ > Instalar app.
+
+Os dois apps (NR-10 e Termografia) ficam independentes e com dados separados.
+Exporte ou faça backup ao final de cada inspeção: os dados ficam só no celular.
